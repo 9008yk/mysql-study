@@ -1,0 +1,7 @@
+.env
+mysql-data/
+node_modules/
+*.log
+.idea/
+.vscode/
+.DS_Store
