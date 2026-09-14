@@ -37,4 +37,4 @@ docker compose down -v
 - [x] 第 3 课：多表查询（`notes/lesson-03.md`）
 - [x] 第 4 课：事务（`notes/lesson-04.md`）
 - [x] 第 5 课：索引与优化（`mysql/README.md`）
-- [ ] 项目实战（数据库阶段完成，待 Node.js API：`projects/mall_project/`）
+- [x] 项目实战（FastAPI API 已完成：`projects/mall_project/api/`）

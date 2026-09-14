@@ -119,4 +119,40 @@ EXPLAIN 对比结果：
 
 ## 下一阶段
 
-- 用 Node.js 写 REST API
+- 完善 API 测试
+- 用 Dockerfile 把 FastAPI 服务容器化
+- 增加用户注册、支付、取消订单等业务
+- 部署到服务器或云平台
+
+## FastAPI API
+
+API 目录：
+
+```text
+api/
+  app/
+    main.py
+    database.py
+    models.py
+    schemas.py
+    routers/
+  tests/
+  .env.example
+  requirements.txt
+  README.md
+```
+
+当前接口：
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| GET | `/health` | 健康检查 |
+| GET | `/products` | 商品列表 |
+| GET | `/products/{id}` | 商品详情 |
+| GET | `/orders` | 订单列表 |
+| GET | `/orders/{id}` | 订单详情 |
+| POST | `/orders` | 事务下单扣库存 |
+| GET | `/reports/category-sales` | 分类销售额 |
+| GET | `/reports/product-sales` | 商品销量排行 |
+
+启动方式见 `api/README.md`。
