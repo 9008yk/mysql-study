@@ -36,6 +36,7 @@ categories 1 - N products 1 - N order_items N - 1 orders N - 1 users
 migrations/
   V1__create_tables.sql   建库建表
   V2__seed_data.sql       测试数据
+  V3__add_indexes.sql     索引优化
 ```
 
 进入项目根目录执行：
@@ -82,7 +83,40 @@ queries/
 库存不足时抛出错误，整个事务回滚，库存和订单都不会变化。
 演示结束后会自动清理测试订单、恢复库存，方便重复运行。
 
+## 索引优化
+
+V3 做了三组调整：
+
+```text
+orders:
+  (user_id, created_at)    支持用户订单按时间查询
+  (status, created_at)     支持状态筛选加时间范围
+
+order_items:
+  (product_id, order_id, quantity, unit_price)
+  支持按商品聚合销量和销售额，并覆盖查询所需列
+```
+
+新索引建立后，删除了被最左前缀覆盖的旧单列索引，避免重复索引增加写入成本。
+小表上 MySQL 可能仍然选择全表扫描，这是优化器的正常选择；
+数据量变大后，组合索引和覆盖索引的价值才会明显体现。
+
+EXPLAIN 对比结果：
+
+```text
+订单明细聚合：
+  优化前：key=idx_order_items_product，Extra=NULL
+  优化后：key=idx_order_items_product_covering，Extra=Using index
+
+用户订单关联：
+  优化前：key=idx_orders_user
+  优化后：key=idx_orders_user_created
+
+商品表：
+  仍然可能 type=ALL
+  因为当前只有 12 行，全表扫描比走索引回表更便宜
+```
+
 ## 下一阶段
 
-- 索引优化：用 EXPLAIN 验证慢查询
-- 可选：用 Node.js 写 REST API
+- 用 Node.js 写 REST API
